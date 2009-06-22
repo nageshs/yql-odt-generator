@@ -10,12 +10,13 @@
             <urls>
                 <url></url>
             </urls>
-            <paging model="offset">
+$if(paging)$<paging model="offset">
               <start id="start" default="0" />
               <pagesize id="count" max="50" />
               <total default="10"/>
-            </paging>
+            </paging>$endif$
             <inputs>
+                $keys:{<key id="$it.name$" type="$it.type$" required="$it.required$"/>};separator="\n"$
                 <key id="query" type="xs:string" paramType="variable"/>
             </inputs>
             <execute><![CDATA[

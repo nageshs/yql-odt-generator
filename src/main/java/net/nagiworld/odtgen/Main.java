@@ -14,7 +14,7 @@ public class Main {
   public static void main(String[] args) {
     OpenDataTableBean odtBean = new OpenDataTableBean();    
     if (args.length == 0) {
-      Args.usage(odtBean);
+      Args.usage(odtBean);      
       return;
     }
     Args.parse(odtBean, args);

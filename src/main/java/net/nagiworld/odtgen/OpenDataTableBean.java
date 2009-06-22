@@ -7,8 +7,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,6 +32,8 @@ public class OpenDataTableBean {
   private String author;
   private String sampleQuery;
   private String itemPath;
+  private List<Key> keys;  
+
   private StringTemplate st;
 
   public OpenDataTableBean() {
@@ -67,9 +71,21 @@ public class OpenDataTableBean {
   public String getSampleQuery() {
     return sampleQuery;
   }
+
   @Argument (alias = "sample", description = "A sample Query for the binding")
   public void setSampleQuery(String sampleQuery) {
     this.sampleQuery = sampleQuery;
+  }
+
+  public Key[] getKeys() {
+    return (Key[]) keys.toArray();
+  }
+
+  @Argument (alias = "k", description="add a key format -k {name},{type},{required} e.g.: -k query,xs:string,true")
+  public void setKey(String key) {
+    if (keys == null) keys = new ArrayList<Key>();
+    Key k = new Key(key);
+    keys.add(k);
   }
 
   public String toXMLString() {
@@ -77,10 +93,16 @@ public class OpenDataTableBean {
       throw new IllegalArgumentException("Invalid binding '" + binding +
               "'. Expecting one of "+ALLOWED_BINDINGS);
     }
+    if ("select".equals(getBinding())) {
+      st.setAttribute("paging", true);
+    }
     st.setAttribute("binding", getBinding());
     st.setAttribute("author", getAuthor());
     st.setAttribute("sampleQuery", getSampleQuery());
     st.setAttribute("itemPath", getItemPath());
+    if (keys != null && keys.size() > 0) {
+      st.setAttribute("keys", keys);
+    }
     return st.toString();
   }
 
